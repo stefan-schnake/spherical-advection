@@ -11,23 +11,30 @@ a_th = a(2);
 num_r = numel(r)-1;
 num_th = numel(th)-1;
 
+%Get jacobians/scalings for FE functions on each domain
 jac_r = (r(2)-r(1))/2;
 jac_th = (th(2)-th(1))/2;
 
+%Create Gaussian quadrature points and weights
 [quad_ref, w_ref]  = lgwt(10,-1,1);
 quad_ref = quad_ref';
 
+%Build Legendre Polynomials of each polynomial degree
+% and scale by jac in r direction
+% to make orthonormanl in L^2 on a cartesian grid. 
 [leg_vals,leg_der_vals,leg_edge_vals,~] = buildLegendre(10,k);
 leg_vals = leg_vals/sqrt(jac_r);
 leg_der_vals = leg_der_vals/(sqrt(jac_r)*jac_r);
 leg_edge_vals = leg_edge_vals/sqrt(jac_r);
 
-
-test_ref = repmat(w_ref',k+1,1).*leg_vals; %Weights included with the test functions
+%Multiply weights in for speed
+test_ref = repmat(w_ref',k+1,1).*leg_vals;
 test_der_ref = repmat(w_ref',k+1,1).*leg_der_vals;
 
+%Build necessary volume and edge integrals in the r direction
 block_r = cell(11,num_r);
 for i=1:num_r
+    %Create quadrature points on r cell
     quad_r = quad_ref*(r(i+1)-r(i))/2 + (r(i+1)+r(i))/2;
 
     %%%Volume integrals
@@ -92,18 +99,23 @@ for i=1:num_r
 
 end
 
+%Build Legendre Polynomials of each polynomial degree
+% and scale by jac in th direction
+% to make orthonormanl in L^2 on a cartesian grid. 
 [leg_vals,leg_der_vals,leg_edge_vals,~] = buildLegendre(10,k);
 leg_vals = leg_vals/sqrt(jac_th);
 leg_der_vals = leg_der_vals/(sqrt(jac_th)*jac_th);
 leg_edge_vals = leg_edge_vals/sqrt(jac_th);
 
+%Multiply weights in for speed
 test_ref = repmat(w_ref',k+1,1).*leg_vals; %Weights included with the test functions
 test_der_ref = repmat(w_ref',k+1,1).*leg_der_vals;
 
+%Build necessary volume and edge integrals in the theta direction
 block_th = cell(2,num_th);
 for i=1:num_th
 
-    %Create quadrature points on x cell
+    %Create quadrature points on th cell
     quad_th = quad_ref*(th(i+1)-th(i))/2 + (th(i+1)+th(i))/2;
     
     %Volume integrals
@@ -115,7 +127,7 @@ for i=1:num_th
 
     %%%Edge integrals
     
-    %%%Lower edge integrals, h = th(i)
+    %%%Lower edge integrals, th = th(i)
     %Sharing volume
     %<{phi_i},[phi_j]>_e
     avg  = leg_edge_vals(:,1)/2;
