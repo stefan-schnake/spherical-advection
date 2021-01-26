@@ -22,11 +22,13 @@ a = [2,1];
 %Solution and source vector
 soln = @(r,th,t) 1./sqrt(r).*(exp(th).^(-3)).*cos(-.5*r+t)./sin(th);
 source = @(r,th,t) 0*r;
-%%%--------------------------------
 
-%Create meshes in each direction
+%Upper and lower bounds for r and theta
 rr = [.5,2*pi];
 thth = [pi/6,5*pi/6];
+%%%--------------------------------
+
+%Create uniform mesh in each direction
 r = rr(1):(rr(2)-rr(1))/N:rr(2);
 th = thth(1):(thth(2)-thth(1))/N:thth(2);
 
