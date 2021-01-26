@@ -4,7 +4,7 @@
 %and the solution u(r,phi,theta) is constant in (phi,theta).
 
 %Endpoints of domain
-a = .5;
+a = 0;
 b = 2*pi;
 
 %Number of elements
@@ -37,6 +37,7 @@ u = mass\u0;
 U = repmat(u,1,3)'; U = U(:);
 
 %Start timestepping
+figure(31);
 t=0;
 plot(xplot,U,'o',xfine,soln(xfine,t));
 L2 = [];
