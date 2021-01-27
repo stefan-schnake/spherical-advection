@@ -41,24 +41,43 @@ for i=1:num_x
 end
 Z = Z';
 
-figure(5)
-surf(X,V,Z);
-xlabel('r');
-ylabel('th');
-title('Plot of numerical soln')
-if nargin > 4
+if nargin <= 4
+    figure(5)
+    surf(X,V,Z);
+    xlabel('r');
+    ylabel('th');
+    title('Plot of numerical soln')
+else
+    subplot(2,2,1)
+    surf(X,V,Z);
+    xlabel('r');
+    ylabel('th');
+    title('Plot of numerical soln')
     [XX,VV] = meshgrid(X,V);
-    figure(6)
+    subplot(2,2,2)
     surf(XX,VV,utrue(XX,VV));
     xlabel('r');
     ylabel('th');
     title('Plot of true soln');
-    figure(7)
+    subplot(2,2,3)
     surf(XX,VV,Z-utrue(XX,VV));
     xlabel('r');
     ylabel('th');
     error = Z-utrue(XX,VV);
-    title("Error Plot.  L-ininity error = "+num2str(norm(reshape(error,[],1),inf)));
+    title("Plot of error");
+    subplot(2,2,4)
+    h = findobj(gca,'Type','line');
+    T = get(h,'Xdata');
+    Linf = get(h,'Ydata');
+    if isempty(T)
+        T = 1;
+        Linf = norm(reshape(error,[],1),inf);
+    else
+        T = [T,T(end)+1];
+        Linf = [Linf norm(reshape(error,[],1),inf)];
+    end
+    plot(T,Linf);
+    title("L^{inf} Norm");
 end
 %surf(X,V,Z-sin(2*pi*X)*(V.^2-1)');
 %figure()

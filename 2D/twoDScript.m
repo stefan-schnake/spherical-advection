@@ -11,7 +11,7 @@ N = 8;
 
 %Polynomial degree (k=0 -> constant, etc...)
 %   can be as high as you want.
-k = 2;
+k = 5;
 
 %dt
 dt = 0.05;
